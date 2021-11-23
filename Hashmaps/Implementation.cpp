@@ -72,13 +72,12 @@ class ourmap {
 		MapNode<V>* head = buckets[bucketIndex];
 		while (head != NULL) {
 			if (head->key == key) {
-				head->value = value; //if key is present ,just increase the value.
+				head->value = value; 
 				return;
 			}
 			head = head->next;
 		}
         
-        //if head is not found ,create a newnode ans insert that node before head so making it as head and making bucket index to this node as new head. 
 		head = buckets[bucketIndex];
 		MapNode<V>* node = new MapNode<V>(key, value);
 		node->next = head;
@@ -89,6 +88,29 @@ class ourmap {
         if(loadFactor>0.7){
             rehash();
         }
+	}
+
+    V remove(string key) {
+		int bucketIndex = getBucketIndex(string key);
+		MapNode<V>* head = buckets[bucketIndex];
+		MapNode<V>* prev = NULL;
+		while (head != NULL) {
+			if (head->key == key) {
+				if (prev == NULL) {
+					buckets[bucketIndex] = head->next;
+				} else {
+					prev->next = head->next;
+				}
+				V value = head->value;
+				head->next = NULL;
+				delete head;
+				count--;
+				return value;
+			}
+			prev = head;
+			head = head->next;
+		}
+		return 0;
 	}
 
      void rehash(){
@@ -117,5 +139,4 @@ class ourmap {
          }
          delete[] temp;
      }
-     
 };
